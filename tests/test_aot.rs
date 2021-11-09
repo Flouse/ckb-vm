@@ -55,6 +55,26 @@ impl<Mac: SupportMachine> Syscalls<Mac> for CustomSyscall {
 }
 
 #[test]
+pub fn test_aot_with_polyjuice_generator() {
+    // generator is Polyjuice generator - https://github.com/nervosnetwork/godwoken-polyjuice/blob/main/Makefile#L60
+    let buff = fs::read("tests/programs/generator").unwrap().into();
+    let mut aot_machine = AotCompilingMachine::load(&buff, None, ISA_IMC, VERSION0).unwrap();
+    let aot_code = aot_machine.compile().unwrap();
+
+    // let asm_core = AsmCoreMachine::new(ISA_IMC, VERSION0, u64::max_value());
+    // let core = DefaultMachineBuilder::new(asm_core)
+    //     .syscall(Box::new(CustomSyscall {}))
+    //     .build();
+    // let mut machine = AsmMachine::new(core, Some(&aot_code));
+    // machine
+    //     .load_program(&buff, &vec!["syscall".into()])
+    //     .unwrap();
+    // let result = machine.run();
+    // assert!(result.is_ok());
+    // assert_eq!(result.unwrap(), 39)
+}
+
+#[test]
 pub fn test_aot_with_custom_syscall() {
     let buffer = fs::read("tests/programs/syscall64").unwrap().into();
     let mut aot_machine = AotCompilingMachine::load(&buffer, None, ISA_IMC, VERSION0).unwrap();
